@@ -1,5 +1,7 @@
 package application;
 
+import java.io.IOException;
+
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
@@ -37,32 +39,56 @@ public class Player {
 		playerBounds = playerView.getBoundsInParent();
 	}
 
-	public void Movement(Pane game) {
-
+	public void Movement(Pane game, Networking n) throws IOException {
+	
 		int speed = 25;
 
 		playerView.setFocusTraversable(true);
 		playerView.requestFocus();
 
 		if (playerNum.equals("player1")) {
-
+			
 			game.setOnKeyPressed(event -> {
 				if (event.getCode() == KeyCode.W && playerView.getY() - speed >= 0) {
 					playerView.setY(playerView.getY() - speed);
 					playerPos.subtract(0,speed);
 					event.consume();
+					try {
+						n.encodeData(Commands.UP.ordinal());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				} else if (event.getCode() == KeyCode.S && playerView.getY() + speed <= 500 - 32) {
 					playerView.setY(playerView.getY() + speed);
 					playerPos.add(0,speed);
 					event.consume();
+					try {
+						n.encodeData(Commands.DOWN.ordinal());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				} else if (event.getCode() == KeyCode.A && playerView.getX() - speed >= 0) {
 					playerView.setX(playerView.getX() - speed);
 					playerPos.subtract(speed,0);
 					event.consume();
+					try {
+						n.encodeData(Commands.LEFT.ordinal());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				} else if (event.getCode() == KeyCode.D && playerView.getX() + speed <= 250 - 32) {
 					playerView.setX(playerView.getX() + speed);
 					playerPos.add(speed,0);
 					event.consume();
+					try {
+						n.encodeData(Commands.RIGHT.ordinal());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				
 
@@ -70,23 +96,17 @@ public class Player {
 		}
 		
 		if (playerNum.equals("player2")) {
-
-			game.setOnKeyPressed(event -> {
-				if (event.getCode() == KeyCode.W && playerView.getY() - speed >= 0) {
-					playerView.setY(playerView.getY() - speed);
-					event.consume();
-				} else if (event.getCode() == KeyCode.S && playerView.getY() + speed <= 500 - 32) {
-					playerView.setY(playerView.getY() + speed);
-					event.consume();
-				} else if (event.getCode() == KeyCode.A && playerView.getX() - speed >= 250) {
-					playerView.setX(playerView.getX() - speed);
-					event.consume();
-				} else if (event.getCode() == KeyCode.D && playerView.getX() + speed <= 500 - 32) {
-					playerView.setX(playerView.getX() + speed);
-					event.consume();
-				}
-
-			});
+			
+			int key = n.decodeData();
+			if (key == 0 && playerView.getY() - speed >= 0) {
+				playerView.setY(playerView.getY() - speed);
+			} else if (key == 1 && playerView.getY() + speed <= 500 - 32) {
+				playerView.setY(playerView.getY() + speed);
+			} else if (key == 2 && playerView.getX() - speed >= 250) {
+				playerView.setX(playerView.getX() - speed);
+			} else if (key == 3 && playerView.getX() + speed <= 500 - 32) {
+				playerView.setX(playerView.getX() + speed);
+			}
 		}
 
 	}

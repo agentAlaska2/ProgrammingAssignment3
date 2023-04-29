@@ -1,7 +1,10 @@
 package application;
 
+import java.util.Optional;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -10,13 +13,20 @@ public class Main extends Application {
 	Pane game = new Pane();
 	Player player1 = new Player("player1", game);
 	Player player2 = new Player("player2", game);
+	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			
+			TextInputDialog getHostname = new TextInputDialog();
+			getHostname.setHeaderText(null);
+			getHostname.setTitle(null);
+			getHostname.setContentText("Enter the hostname of the player's computer you wish to compete with: ");
+			Optional<String> hostname = getHostname.showAndWait();
+			String name = hostname.toString();
+			Networking net = new Networking(name);
 			//Fireball fireball = new Fireball(player2, game);
-			player1.Movement(game);
-			player2.Movement(game);
+			player1.Movement(game, net);
+			//player2.Movement(game, net);
 			
 			game.setOnMousePressed(event -> {
 				Fireball fireball = new Fireball(player2, game);
