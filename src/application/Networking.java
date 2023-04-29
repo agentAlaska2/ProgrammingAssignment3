@@ -7,6 +7,7 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Random;
 
 public class Networking {
 
@@ -19,7 +20,8 @@ public class Networking {
 
 	public Networking(/*boolean hostGame, String addr*/) throws UnknownHostException, SocketException {
 		hostAddr = (Inet4Address) Inet4Address.getLocalHost();
-		port = 3999;
+		Random r = new Random();
+		port = (int) (r.nextDouble() + 1024);
 		gameDataSocket = new DatagramSocket(port);
 		byte[] ipAddr = new byte[4];
 		ipAddr[0] = (byte) 192;
