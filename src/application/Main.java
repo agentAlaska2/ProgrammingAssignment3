@@ -15,14 +15,14 @@ public class Main extends Application {
 			Player player1 = new Player("player1", game);
 			Player player2 = new Player("player2", game);
 
-			Fireball fireball = new Fireball(player2, game);
+			//Fireball fireball = new Fireball(player2, game);
 			player1.Movement(game);
 			player2.Movement(game);
 			
-			//game.setOnMousePressed(event -> {
-				//Fireball fireball = new Fireball(player2, game);
-				//fireball.CastFireball(game, event.getX(), event.getY());
-			//});
+			game.setOnMousePressed(event -> {
+				Fireball fireball = new Fireball(player2, game);
+				fireball.CastFireball(player2, game, event.getX(), event.getY());
+			});
 
 			game.setStyle("-fx-background-color: lightgray;");
 			primaryStage.setResizable(false);

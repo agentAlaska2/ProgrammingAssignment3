@@ -1,5 +1,6 @@
 package application;
 
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,7 +15,8 @@ public class Player {
 	String imagePath;
 	ImageView playerView;
 	Point2D playerPos;
-
+	Bounds playerBounds;
+	
 	public Player(String playerNum, Pane game) {
 		health = 3;
 		this.playerNum = playerNum;
@@ -33,6 +35,7 @@ public class Player {
 			playerPos = new Point2D(300,150);
 			game.getChildren().add(playerView);
 		}
+		playerBounds = playerView.getBoundsInParent();
 	}
 
 	public void Movement(Pane game) {
@@ -91,5 +94,8 @@ public class Player {
 	public Point2D getPlayerPos() {
 		return playerPos;
 	}
-
+	
+	public Bounds getBounds() {
+		return playerBounds;
+	}
 }
