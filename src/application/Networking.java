@@ -21,13 +21,14 @@ public class Networking {
 	public Networking(/*boolean hostGame, String addr*/) throws UnknownHostException, SocketException {
 		hostAddr = (Inet4Address) Inet4Address.getLocalHost();
 		Random r = new Random();
-		port = (int) (r.nextDouble() + 1024);
+		port = (int) ((r.nextDouble() * 100) + 1024);
 		gameDataSocket = new DatagramSocket(port);
 		byte[] ipAddr = new byte[4];
 		ipAddr[0] = (byte) 192;
-		ipAddr[0] = (byte) 168;
-		ipAddr[0] = (byte) 4;
-		ipAddr[0] = (byte) 3;
+		ipAddr[1] = (byte) 168;
+		ipAddr[2] = (byte) 4;
+		ipAddr[3] = (byte) 3;
+		System.out.println(ipAddr);
 		srvAddr = InetAddress.getByAddress(ipAddr);
 		//gameDataSocket.connect(InetAddress.getByName(hostname), port);
 		gameDataSocket.connect(srvAddr, port);
