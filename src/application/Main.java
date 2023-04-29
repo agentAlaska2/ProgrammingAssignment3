@@ -17,13 +17,13 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			TextInputDialog getHostname = new TextInputDialog();
-			getHostname.setHeaderText(null);
-			getHostname.setTitle(null);
-			getHostname.setContentText("Enter the hostname of the player's computer you wish to compete with: ");
-			Optional<String> hostname = getHostname.showAndWait();
-			String name = hostname.toString();
-			Networking net = new Networking(name);
+//			TextInputDialog getHostname = new TextInputDialog();
+//			getHostname.setHeaderText(null);
+//			getHostname.setTitle(null);
+//			getHostname.setContentText("Enter the hostname of the player's computer you wish to compete with: ");
+//			Optional<String> hostname = getHostname.showAndWait();
+//			String name = hostname.toString();
+			Networking net = new Networking();
 			//Fireball fireball = new Fireball(player2, game);
 			player1.Movement(game, net);
 			//player2.Movement(game, net);

@@ -3,6 +3,7 @@ package application;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
@@ -11,16 +12,22 @@ public class Networking {
 
 	private DatagramSocket gameDataSocket;
 	private DatagramPacket dataPacket;
-	private InetAddress hostAddr;
-	private InetAddress srvAddr;
+	private Inet4Address hostAddr;
+	private Inet4Address srvAddr;
 	private int port;
 	private byte[] data;
 
-	public Networking(/*boolean hostGame, */String hostname) throws UnknownHostException, SocketException {
-		hostAddr = InetAddress.getLocalHost();
-		port = 491532;
-		gameDataSocket = new DatagramSocket(491532);
-		gameDataSocket.connect(InetAddress.getByName(hostname), port);
+	public Networking(/*boolean hostGame, String addr*/) throws UnknownHostException, SocketException {
+		hostAddr = (Inet4Address) Inet4Address.getLocalHost();
+		port = 3999;
+		gameDataSocket = new DatagramSocket(port);
+		byte[] ipAddr = new byte[4];
+		ipAddr[0] = (byte) 192;
+		ipAddr[0] = (byte) 168;
+		ipAddr[0] = (byte) 4;
+		ipAddr[0] = (byte) 3;
+		//gameDataSocket.connect(InetAddress.getByName(hostname), port);
+		gameDataSocket.connect(InetAddress.getByAddress(ipAddr), port);
 	}
 
 	public void encodeData(Integer num) throws IOException {
