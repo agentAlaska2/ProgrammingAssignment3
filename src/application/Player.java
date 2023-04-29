@@ -21,7 +21,7 @@ public class Player {
 		health = 3;
 		this.playerNum = playerNum;
 		imagePath = "file:Resources/" + playerNum + ".png";
-		playerImg = new Image(imagePath, 65, 65, false, false);
+		playerImg = new Image(imagePath, 50, 50, false, false);
 		playerView = new ImageView(playerImg);
 
 		if (playerNum.equals("player1")) {

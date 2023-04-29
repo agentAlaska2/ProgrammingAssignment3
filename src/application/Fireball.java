@@ -17,8 +17,7 @@ public class Fireball {
 	public Fireball(Player player, Pane game) {
 		fireballImage = new Image("file:Resources/fireball.gif", 25, 25, false, false);
 		fireballView = new ImageView(fireballImage);
-		fireballView.setX(player.getPlayerPos().getX());
-		fireballView.setY(player.getPlayerPos().getY() + 16);
+
 		fireballBounds = fireballView.getBoundsInParent();
 		
 		game.getChildren().add(fireballView);
@@ -32,6 +31,9 @@ public class Fireball {
 		int speed = PathagoreanTheorem(Xval, Yval);
 		xSpeed = Xval / speed;
 		ySpeed = Yval / speed;
+		
+		fireballView.setX(player.playerView.getX());
+		fireballView.setY(player.playerView.getY() + 16);
 
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
@@ -56,9 +58,9 @@ public class Fireball {
 					ySpeed *= -1;
 
 				}
-				if (fireballBounds.intersects(player.getBounds())){
-					game.getChildren().remove(fireballView);
-				}
+//				if (fireballBounds.intersects(player.getBounds())){
+//					game.getChildren().remove(fireballView);
+//				}
 				
 				
 			}
