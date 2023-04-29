@@ -13,7 +13,7 @@ public class Networking {
 	private DatagramSocket gameDataSocket;
 	private DatagramPacket dataPacket;
 	private Inet4Address hostAddr;
-	private Inet4Address srvAddr;
+	private InetAddress srvAddr;
 	private int port;
 	private byte[] data;
 
@@ -26,8 +26,9 @@ public class Networking {
 		ipAddr[0] = (byte) 168;
 		ipAddr[0] = (byte) 4;
 		ipAddr[0] = (byte) 3;
+		srvAddr = InetAddress.getByAddress(ipAddr);
 		//gameDataSocket.connect(InetAddress.getByName(hostname), port);
-		gameDataSocket.connect(InetAddress.getByAddress(ipAddr), port);
+		gameDataSocket.connect(srvAddr, port);
 	}
 
 	public void encodeData(Integer num) throws IOException {
@@ -39,7 +40,7 @@ public class Networking {
 
 	@SuppressWarnings("null")
 	public int decodeData() throws IOException {
-		DatagramPacket p = null;
+		DatagramPacket p = new DatagramPacket(data, 1, srvAddr, port);
 		gameDataSocket.receive(p);
 		return p.getData()[0];
 	}
