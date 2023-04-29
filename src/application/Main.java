@@ -26,7 +26,7 @@ public class Main extends Application {
 			Networking net = new Networking();
 			//Fireball fireball = new Fireball(player2, game);
 			player1.Movement(game, net);
-			//player2.Movement(game, net);
+			player2.Movement(game, net);
 			
 			game.setOnMousePressed(event -> {
 				Fireball fireball = new Fireball(player2, game);
