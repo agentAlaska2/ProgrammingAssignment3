@@ -12,28 +12,30 @@ public class Fireball {
 	ImageView fireballView;
 	double xSpeed;
 	double ySpeed;
-	Bounds fireballBounds;
+	Boolean isHit1 = false;
+	Boolean isHit2 = false;
+	
 
 	public Fireball(Player player, Pane game) {
 		fireballImage = new Image("file:Resources/fireball.gif", 25, 25, false, false);
 		fireballView = new ImageView(fireballImage);
 
-		fireballBounds = fireballView.getBoundsInParent();
 		
+
 		game.getChildren().add(fireballView);
 	}
 
-	public void CastFireball(Player player, Pane game, double x, double y) {
+	public void CastFireball(Player player1, Player player2, Pane game, double x, double y) {
 
-		int Xval = (int) x - (int) player.getPlayerPos().getX();
-		int Yval = (int) y - (int) player.getPlayerPos().getY();
+		int Xval = (int) x - (int) player1.playerView.getX();
+		int Yval = (int) y - (int) player1.playerView.getY();
 
 		int speed = PathagoreanTheorem(Xval, Yval);
 		xSpeed = Xval / speed;
 		ySpeed = Yval / speed;
-		
-		fireballView.setX(player.playerView.getX());
-		fireballView.setY(player.playerView.getY() + 16);
+
+		fireballView.setX(player1.playerView.getX() + -32);
+		fireballView.setY(player1.playerView.getY() + 16);
 
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
@@ -45,29 +47,40 @@ public class Fireball {
 				if (fireballView.getX() < 0 && xSpeed < 0) {
 					xSpeed *= -1;
 
-				}
-				if (fireballView.getX() > 475 && xSpeed > 0) {
+				} else if (fireballView.getX() > 475 && xSpeed > 0) {
 					xSpeed *= -1;
 
-				}
-				if (fireballView.getY() < 0 && ySpeed < 0) {
+				} else if (fireballView.getY() < 0 && ySpeed < 0) {
 					ySpeed *= -1;
 
 				}
-				if (fireballView.getY() > 475 && ySpeed > 0) {
+
+				else if (fireballView.getY() > 475 && ySpeed > 0) {
 					ySpeed *= -1;
 
+				} else {
+					Bounds fireballBounds = fireballView.getBoundsInParent();
+					Bounds playerBounds = player1.playerView.getBoundsInParent();
+					Bounds player2Bounds = player2.playerView.getBoundsInParent();
+					if (fireballBounds.intersects(playerBounds)) {
+						isHit1 = true;
+						player1.isHit();
+						game.getChildren().remove(fireballView);
+						
+					} else if (fireballBounds.intersects(player2Bounds)) {
+						player2.isHit();
+						isHit2 = true;
+						game.getChildren().remove(fireballView);
+						
+						
+					}
+					
 				}
-//				if (fireballBounds.intersects(player.getBounds())){
-//					game.getChildren().remove(fireballView);
-//				}
-				
-				
+
 			}
-			
+
 		};
 		timer.start();
-
 		
 	}
 

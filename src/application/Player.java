@@ -9,7 +9,7 @@ import javafx.scene.layout.Pane;
 
 public class Player {
 
-	int health;
+	int health = 3;
 	String playerNum;
 	Image playerImg;
 	String imagePath;
@@ -18,7 +18,6 @@ public class Player {
 	Bounds playerBounds;
 	
 	public Player(String playerNum, Pane game) {
-		health = 3;
 		this.playerNum = playerNum;
 		imagePath = "file:Resources/" + playerNum + ".png";
 		playerImg = new Image(imagePath, 50, 50, false, false);
@@ -65,6 +64,7 @@ public class Player {
 					playerPos.add(speed,0);
 					event.consume();
 				}
+				
 
 			});
 		}
@@ -97,5 +97,14 @@ public class Player {
 	
 	public Bounds getBounds() {
 		return playerBounds;
+	}
+	
+	public void isHit() {
+		health -= 1;
+		System.out.println(health);
+	}
+	
+	public int getHealth() {
+		return health;
 	}
 }
