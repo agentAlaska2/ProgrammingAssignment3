@@ -96,7 +96,7 @@ public class Player {
 		}
 		
 		if (playerNum.equals("player2")) {
-			
+			try {
 			int key = n.decodeData();
 			if (key == 0 && playerView.getY() - speed >= 0) {
 				playerView.setY(playerView.getY() - speed);
@@ -106,6 +106,9 @@ public class Player {
 				playerView.setX(playerView.getX() - speed);
 			} else if (key == 3 && playerView.getX() + speed <= 500 - 32) {
 				playerView.setX(playerView.getX() + speed);
+			}
+			} catch (Exception e){
+				System.out.println("No data");
 			}
 		}
 
