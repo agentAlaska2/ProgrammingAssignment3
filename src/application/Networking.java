@@ -14,6 +14,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Networking {
 
@@ -25,23 +26,25 @@ public class Networking {
 	private byte[] data; // stores the data for input
 
 	/**
-	 * @param integers representing an ip address Constructer takes in numbers
+	 * @param integers representing an ip address Constructor takes in numbers
 	 *                 representing an ip address of the other player's computer,
 	 *                 then makes a connection to the other player.
 	 * 
 	 * @throws UnknownHostException
 	 * @throws SocketException
 	 */
-	public Networking(/* boolean hostGame, String addr */) throws UnknownHostException, SocketException {
+	public Networking(String addr) throws UnknownHostException, SocketException {
 		hostAddr = (Inet4Address) Inet4Address.getLocalHost();
 		Random r = new Random();
 		port = (int) ((r.nextDouble() * 100) + 1024);
 		gameDataSocket = new DatagramSocket(port);
 		byte[] ipAddr = new byte[4];
-		ipAddr[0] = (byte) 192;
-		ipAddr[1] = (byte) 168;
-		ipAddr[2] = (byte) 4;
-		ipAddr[3] = (byte) 3;
+		Scanner scr = new Scanner(addr);
+		scr.useDelimiter(".");
+		for (int i = 0; i < 4; i++) {
+			Integer n = Integer.parseInt(scr.next());
+			ipAddr[i] = n.byteValue();
+		}
 		System.out.println(ipAddr);
 		srvAddr = InetAddress.getByAddress(ipAddr);
 		// gameDataSocket.connect(InetAddress.getByName(hostname), port);

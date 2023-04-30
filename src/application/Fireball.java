@@ -25,8 +25,9 @@ public class Fireball {
 		game.getChildren().add(fireballView);
 	}
 
-	public void CastFireball(Player player1, Player player2, Pane game, double x, double y) {
-
+	public void CastFireball(Player player1, Player player2, Pane game, double x, double y, Networking n) {
+		
+		n.sendFireball(x, y);
 		int Xval = (int) x - (int) player1.playerView.getX();
 		int Yval = (int) y - (int) player1.playerView.getY();
 

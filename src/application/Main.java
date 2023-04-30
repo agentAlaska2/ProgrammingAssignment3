@@ -14,23 +14,35 @@ public class Main extends Application {
 	Player player1 = new Player("player1", game);
 	Player player2 = new Player("player2", game);
 	
+	public void createFireball(double x, double y, Networking n) {
+		Fireball fireball = new Fireball(player2, game);
+		fireball.CastFireball(player2, player1, game, x, y, n);
+	}
+	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-//			TextInputDialog getHostname = new TextInputDialog();
-//			getHostname.setHeaderText(null);
-//			getHostname.setTitle(null);
-//			getHostname.setContentText("Enter the hostname of the player's computer you wish to compete with: ");
-//			Optional<String> hostname = getHostname.showAndWait();
-//			String name = hostname.toString();
-			Networking net = new Networking();
+			TextInputDialog getAddr = new TextInputDialog();
+			getAddr.setHeaderText(null);
+			getAddr.setTitle(null);
+			getAddr.setContentText("Enter the IP address of the player's computer you wish to compete with: ");
+			Optional<String> addr = getAddr.showAndWait();
+			String name = addr.toString();
+			Networking net = new Networking(name);
 			//Fireball fireball = new Fireball(player2, game);
 			player1.Movement(game, net);
 			player2.Movement(game, net);
+			try {
+				double[] pos = net.recieveFireball();
+				createFireball(pos[0], pos[1], net);
+			} catch (Exception e) {
+				
+			}
 			
 			game.setOnMousePressed(event -> {
-				Fireball fireball = new Fireball(player2, game);
-				fireball.CastFireball(player2, player1, game, event.getX(), event.getY());
+				createFireball(event.getX(), event.getY(), net);
+//				Fireball fireball = new Fireball(player2, game);
+//				fireball.CastFireball(player2, player1, game, event.getX(), event.getY(), net);
 			});
 			
 			if (player1.getHealth() <= 0) {
