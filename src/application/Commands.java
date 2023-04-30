@@ -1,3 +1,8 @@
+/**
+ * Program represents player's inputs
+ * 
+ * 
+ */
 package application;
 
 public enum Commands {

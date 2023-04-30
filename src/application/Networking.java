@@ -1,3 +1,9 @@
+/**
+ * Program manages networking between hosts and the sending and receiving of data
+ * 
+ * 
+ */
+
 package application;
 
 import java.io.IOException;
@@ -11,14 +17,22 @@ import java.util.Random;
 
 public class Networking {
 
-	private DatagramSocket gameDataSocket;
-	private DatagramPacket dataPacket;
-	private Inet4Address hostAddr;
-	private InetAddress srvAddr;
-	private int port;
-	private byte[] data;
+	private DatagramSocket gameDataSocket; // socket for sending data
+	private DatagramPacket dataPacket; // packet to be used to send data
+	private Inet4Address hostAddr; // host ip address
+	private InetAddress srvAddr; // address of the other player's computer
+	private int port; // port number to connect to
+	private byte[] data; // stores the data for input
 
-	public Networking(/*boolean hostGame, String addr*/) throws UnknownHostException, SocketException {
+	/**
+	 * @param integers representing an ip address Constructer takes in numbers
+	 *                 representing an ip address of the other player's computer,
+	 *                 then makes a connection to the other player.
+	 * 
+	 * @throws UnknownHostException
+	 * @throws SocketException
+	 */
+	public Networking(/* boolean hostGame, String addr */) throws UnknownHostException, SocketException {
 		hostAddr = (Inet4Address) Inet4Address.getLocalHost();
 		Random r = new Random();
 		port = (int) ((r.nextDouble() * 100) + 1024);
@@ -30,17 +44,27 @@ public class Networking {
 		ipAddr[3] = (byte) 3;
 		System.out.println(ipAddr);
 		srvAddr = InetAddress.getByAddress(ipAddr);
-		//gameDataSocket.connect(InetAddress.getByName(hostname), port);
+		// gameDataSocket.connect(InetAddress.getByName(hostname), port);
 		gameDataSocket.connect(srvAddr, port);
 	}
-
+	/**
+	 * 
+	 * @param int representing an input
+	 * Sends a packet with a int converted to byte to the other player,
+	 * @throws IOException
+	 */
 	public void encodeData(Integer num) throws IOException {
 		data = new byte[1];
 		data[0] = num.byteValue();
 		dataPacket = new DatagramPacket(data, 1, srvAddr, port);
 		gameDataSocket.send(dataPacket);
 	}
-
+	
+	/**
+	 * Decodes data from a packet to interpreted as player movment
+	 * @return an int representing a player's movment
+	 * @throws IOException
+	 */
 	@SuppressWarnings("null")
 	public int decodeData() throws IOException {
 		DatagramPacket p = new DatagramPacket(data, 1, srvAddr, port);
