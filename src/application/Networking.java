@@ -38,14 +38,13 @@ public class Networking {
 		Random r = new Random();
 		port = (int) ((r.nextDouble() * 100) + 1024);
 		gameDataSocket = new DatagramSocket(port);
-		byte[] ipAddr = new byte[4];
-		Scanner scr = new Scanner(addr);
-		scr.useDelimiter(".");
-		for (int i = 0; i < 4; i++) {
-			Integer n = Integer.parseInt(scr.next());
-			ipAddr[i] = n.byteValue();
-		}
-		System.out.println(ipAddr);
+		byte[] ipAddr = addr.getBytes();
+//		Scanner scr = new Scanner(addr);
+//		scr.useDelimiter(".");
+//		for (int i = 0; i < 4; i++) {
+//			int n = Integer.parseInt(scr.next());
+//			//ipAddr[i] = (Integer) n.byteValue();
+		//}
 		srvAddr = InetAddress.getByAddress(ipAddr);
 		// gameDataSocket.connect(InetAddress.getByName(hostname), port);
 		gameDataSocket.connect(srvAddr, port);

@@ -13,12 +13,24 @@ public class Main extends Application {
 	Pane game = new Pane();
 	Player player1 = new Player("player1", game);
 	Player player2 = new Player("player2", game);
-	
+
 	public void createFireball(double x, double y, Networking n) {
-		Fireball fireball = new Fireball(player2, game);
-		fireball.CastFireball(player2, player1, game, x, y, n);
+		if (player1.getHealth() > 0 && player2.getHealth() > 0) {
+			Fireball fireball = new Fireball(player2, game);
+			fireball.CastFireball(player2, player1, game, x, y, n);
+		}
+		if (player1.getHealth() <= 0) {
+			Text t = new Text(250, 250, "Player 2 wins!");
+			player1.playerView.setVisible(false);
+			game.getChildren().add(t);
+		}
+		if (player2.getHealth() <= 0) {
+			Text t = new Text(250, 250, "Player 1 wins!");
+			player2.playerView.setVisible(false);
+			game.getChildren().add(t);
+		}
 	}
-	
+
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -29,22 +41,22 @@ public class Main extends Application {
 			Optional<String> addr = getAddr.showAndWait();
 			String name = addr.toString();
 			Networking net = new Networking(name);
-			//Fireball fireball = new Fireball(player2, game);
+			// Fireball fireball = new Fireball(player2, game);
 			player1.Movement(game, net);
 			player2.Movement(game, net);
 			try {
 				double[] pos = net.recieveFireball();
 				createFireball(pos[0], pos[1], net);
 			} catch (Exception e) {
-				
+
 			}
-			
+
 			game.setOnMousePressed(event -> {
 				createFireball(event.getX(), event.getY(), net);
 //				Fireball fireball = new Fireball(player2, game);
 //				fireball.CastFireball(player2, player1, game, event.getX(), event.getY(), net);
 			});
-			
+
 			if (player1.getHealth() <= 0) {
 				Text win = new Text("Player 1 Wins");
 				player1.playerView.setVisible(false);

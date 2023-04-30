@@ -12,21 +12,16 @@ public class Fireball {
 	ImageView fireballView;
 	double xSpeed;
 	double ySpeed;
-	Boolean isHit1 = false;
-	Boolean isHit2 = false;
-	
 
 	public Fireball(Player player, Pane game) {
 		fireballImage = new Image("file:Resources/fireball.gif", 25, 25, false, false);
 		fireballView = new ImageView(fireballImage);
 
-		
-
 		game.getChildren().add(fireballView);
 	}
 
 	public void CastFireball(Player player1, Player player2, Pane game, double x, double y, Networking n) {
-		
+
 		n.sendFireball(x, y);
 		int Xval = (int) x - (int) player1.playerView.getX();
 		int Yval = (int) y - (int) player1.playerView.getY();
@@ -35,8 +30,8 @@ public class Fireball {
 		xSpeed = Xval / speed;
 		ySpeed = Yval / speed;
 
-		fireballView.setX(player1.playerView.getX() + -32);
-		fireballView.setY(player1.playerView.getY() + 16);
+		fireballView.setX(player1.playerView.getX() + 11 + (40 * (Xval / Math.abs(Xval))));
+		fireballView.setY(player1.playerView.getY() + 15);
 
 		AnimationTimer timer = new AnimationTimer() {
 			@Override
@@ -64,30 +59,34 @@ public class Fireball {
 					Bounds playerBounds = player1.playerView.getBoundsInParent();
 					Bounds player2Bounds = player2.playerView.getBoundsInParent();
 					if (fireballBounds.intersects(playerBounds)) {
-						isHit1 = true;
-						player1.isHit();
+						isHit(player1);
 						game.getChildren().remove(fireballView);
-						
+						this.stop();
+
 					} else if (fireballBounds.intersects(player2Bounds)) {
-						player2.isHit();
-						isHit2 = true;
+						isHit(player2);
 						game.getChildren().remove(fireballView);
-						
-						
+						this.stop();
+
 					}
-					
+
 				}
 
 			}
 
 		};
 		timer.start();
-		
+
 	}
 
 	public int PathagoreanTheorem(int x, int y) {
 
 		return ((int) Math.sqrt((x * x) + (y * y)) / 5);
+	}
+
+	public void isHit(Player p) {
+		p.health -= 1;
+		System.out.println(p.health);
 	}
 
 }
