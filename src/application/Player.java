@@ -10,17 +10,39 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
-public class Player {
+/**
+ * Creates a player by importing player 1 image or player 2 image,
+ * players can control their character with the W A S D keys
+ * 
+ * @author McMahonJake
+ * @version 1.0
+ */
 
+public class Player {
+	
+/**
+ * 
+ * health is the amount of times a player can take a hit from a fireball
+ * playerNum is a string that is passed that tags the Player object as player1 or player2
+ * playerImg/imagePath/playerView allows the players to show up on the screen
+ * playerBounds essentially creates the equivalent of a collision box around the player sprite
+ * speed is the amount of pixels the player can move
+ * 
+ */
 	int health = 15;
 	String playerNum;
 	Image playerImg;
 	String imagePath;
 	ImageView playerView;
-	Point2D playerPos;
 	Bounds playerBounds;
 	int speed = 25;
-
+	
+	/**
+	 * constructor for the player, positions the player sprite based on which one it grabs
+	 * 
+	 * @param playerNum is a string that is passed that tags the Player object as player1 or player2
+	 * @param game is the pane used in Main
+	 */
 	public Player(String playerNum, Pane game) {
 		this.playerNum = playerNum;
 		imagePath = "file:Resources/" + playerNum + ".png";
@@ -30,26 +52,36 @@ public class Player {
 		if (playerNum.equals("player1")) {
 			playerView.setX(50);
 			playerView.setY(150);
-			playerPos = new Point2D(50, 150);
 			game.getChildren().add(playerView);
 		} else {
 			playerView.setX(300);
 			playerView.setY(150);
-			playerPos = new Point2D(300, 150);
 			game.getChildren().add(playerView);
 		}
 		playerBounds = playerView.getBoundsInParent();
 	}
 
+	/**
+	 * Moves the player based on input from the keyboard, W A S or D
+	 * will also send the movement to the other computer to move the player 2 sprite
+	 * as well as checks the health of the players
+	 * 
+	 * @param game pane the game uses
+	 * @param n the networking package sent/recieved
+	 * @param p the opposing player
+	 * @param player1 the player this class is
+	 * @throws IOException
+	 */
 	public void Movement(Pane game, Networking n, Player p, Player player1) throws IOException {
 
+		
 		playerView.setFocusTraversable(true);
 		playerView.requestFocus();
-
+		
+		//event determines which key is pressed, and moves the character in that direction.
 		game.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.W && playerView.getY() - speed >= 0) {
 				playerView.setY(playerView.getY() - speed);
-				playerPos.subtract(0, speed);
 				event.consume();
 				try {
 					n.encodeData(Commands.UP.ordinal());
@@ -61,7 +93,6 @@ public class Player {
 				moveOtherPlayer(p, player1, n, game);
 			} else if (event.getCode() == KeyCode.S && playerView.getY() + speed <= 500 - 32) {
 				playerView.setY(playerView.getY() + speed);
-				playerPos.add(0, speed);
 				event.consume();
 				try {
 					n.encodeData(Commands.DOWN.ordinal());
@@ -73,7 +104,6 @@ public class Player {
 				moveOtherPlayer(p, player1, n, game);
 			} else if (event.getCode() == KeyCode.A && playerView.getX() - speed >= 0) {
 				playerView.setX(playerView.getX() - speed);
-				playerPos.subtract(speed, 0);
 				event.consume();
 				try {
 					n.encodeData(Commands.LEFT.ordinal());
@@ -85,7 +115,6 @@ public class Player {
 				moveOtherPlayer(p, player1, n, game);
 			} else if (event.getCode() == KeyCode.D && playerView.getX() + speed <= 250 - 32) {
 				playerView.setX(playerView.getX() + speed);
-				playerPos.add(speed, 0);
 				event.consume();
 				try {
 					n.encodeData(Commands.RIGHT.ordinal());
@@ -101,14 +130,22 @@ public class Player {
 		});
 
 	}
-
-	public Point2D getPlayerPos() {
-		return playerPos;
-	}
-
+	
+	/**
+	 * 
+	 * @return the player's bounds
+	 */
 	public Bounds getBounds() {
 		return playerBounds;
 	}
+	
+	/**
+	 * checks the player's health to determine if a player has no health left
+	 * 
+	 * @param player1 red player
+	 * @param player2 blue player
+	 * @param game game pane
+	 */
 	public void checkHealth(Player player1, Player player2, Pane game) {
 		if (player1.getHealth() <= 0) {
 			Text t = new Text(250, 250, "Player 2 wins!");
@@ -121,15 +158,30 @@ public class Player {
 			game.getChildren().add(t);
 		}
 	}
-
+	
+	/**
+	 * subtracts 1 from the player's health
+	 */
 	public void isHit() {
 		health -= 1;
 	}
 
+	/**
+	 * 
+	 * @return the player's health
+	 */
 	public int getHealth() {
 		return health;
 	}
 
+	/**
+	 * moves the other player based on movement received from other player, or casts fireball
+	 * 
+	 * @param p player 2, the other player
+	 * @param player1 the local player
+	 * @param n the networking bit sent/received
+	 * @param game game pane
+	 */
 	public void moveOtherPlayer(Player p, Player player1, Networking n, Pane game) {
 		try {
 			int key = n.decodeData();
@@ -141,7 +193,7 @@ public class Player {
 				p.playerView.setX(p.playerView.getX() - speed);
 			} else if (key == 2 && p.playerView.getX() + speed <= 500 - 32) {
 				p.playerView.setX(p.playerView.getX() + speed);
-			} else if (key == 4) {
+			} if (key == 4) {
 				double[] pos = n.recieveFireball();
 				Fireball fireball = new Fireball(game);
 				fireball.CastFireball(p, player1, game, pos[0], pos[1], n);
