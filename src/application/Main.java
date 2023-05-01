@@ -20,7 +20,7 @@ public class Main extends Application {
 
 	public void createFireball(double x, double y, Networking n) {
 		if (player1.getHealth() > 0 && player2.getHealth() > 0) {
-			Fireball fireball = new Fireball(player1, game);
+			Fireball fireball = new Fireball(game);
 			fireball.CastFireball(player1, player2, game, x, y, n);
 			n.sendFireball(x,y);
 		}
@@ -56,9 +56,10 @@ public class Main extends Application {
 			else {
 				isHost = false;
 			}
-			player1.Movement(game, net, isHost);
-			player2.Movement(game, net, false);
+			player1.Movement(game, net, isHost, player2);
+			//player2.Movement(game, net, false);
 			try {
+				System.out.println("run");
 				double[] pos = net.recieveFireball();
 				createFireball(pos[0], pos[1], net);
 			} catch (Exception e) {
@@ -68,7 +69,8 @@ public class Main extends Application {
 			game.setOnMousePressed(event -> {
 				createFireball(event.getX(), event.getY(), net);
 			});
-
+			
+			
 			game.setStyle("-fx-background-color: lightgray;");
 			primaryStage.setResizable(false);
 
