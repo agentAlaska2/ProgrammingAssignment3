@@ -1,5 +1,6 @@
 package application;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import javafx.application.Application;
@@ -13,16 +14,18 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-	Pane game = new Pane();
-	Player player1 = new Player("player1", game);
-	Player player2 = new Player("player2", game);
-	boolean isHost;
+	static Pane game = new Pane();
+	static Player player1 = new Player("player1", game);
+	static Player player2 = new Player("player2", game);
 
-	public void createFireball(double x, double y, Networking n) {
-		if (player1.getHealth() > 0 && player2.getHealth() > 0) {
+	public static void createFireball(Player p, double x, double y, Networking n) {
+		if (player1.getHealth() > 0 && player2.getHealth() > 0 && p.playerNum.equals("player1")) {
 			Fireball fireball = new Fireball(game);
 			fireball.CastFireball(player1, player2, game, x, y, n);
-			n.sendFireball(x,y);
+			n.sendFireball(x, y);
+		} else if (player1.getHealth() > 0 && player2.getHealth() > 0 && p.playerNum.equals("player2")) {
+			Fireball fireball = new Fireball(game);
+			fireball.CastFireball(player2, player1, game, x, y, n);
 		}
 		if (player1.getHealth() <= 0) {
 			Text t = new Text(250, 250, "Player 2 wins!");
@@ -36,41 +39,36 @@ public class Main extends Application {
 		}
 	}
 
+	public void moveAndFireball(Pane game, Networking net, Player player1, Player player2) throws IOException {
+		player1.Movement(game, net, player2);
+		if (true) {
+			try {
+				double[] pos = net.recieveFireball();
+				System.out.println("run");
+				createFireball(player2, pos[0], pos[1], net);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	@Override
 	public void start(Stage primaryStage) {
 		try {
 			TextInputDialog getAddr = new TextInputDialog();
 			getAddr.setHeaderText(null);
 			getAddr.setTitle(null);
-			getAddr.setContentText("Enter the IP address of the player's computer you wish to compete with using spaces: ");
+			getAddr.setContentText(
+					"Enter the IP address of the player's computer you wish to compete with using spaces: ");
 			Optional<String> addr = getAddr.showAndWait();
 			String name = addr.get();
 			Networking net = new Networking(name);
-			Alert host = new Alert(AlertType.CONFIRMATION);
-			host.setHeaderText(null);
-			host.setContentText("Do you want to host?");
-			Optional<ButtonType> button = host.showAndWait();
-			if(button.get() == ButtonType.OK) {
-				isHost = true;
-			}
-			else {
-				isHost = false;
-			}
-			player1.Movement(game, net, isHost, player2);
-			//player2.Movement(game, net, false);
-			try {
-				System.out.println("run");
-				double[] pos = net.recieveFireball();
-				createFireball(pos[0], pos[1], net);
-			} catch (Exception e) {
-
-			}
+			moveAndFireball(game, net, player1, player2);
 
 			game.setOnMousePressed(event -> {
-				createFireball(event.getX(), event.getY(), net);
+				createFireball(player1, event.getX(), event.getY(), net);
 			});
-			
-			
+
 			game.setStyle("-fx-background-color: lightgray;");
 			primaryStage.setResizable(false);
 

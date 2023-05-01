@@ -84,7 +84,7 @@ public class Networking {
 
 	@SuppressWarnings("null")
 	public double[] recieveFireball() throws IOException {
-		DatagramPacket p = null;
+		DatagramPacket p = new DatagramPacket(data, 1, srvAddr, port);
 		gameDataSocket.receive(p);
 		double[] pos = new double[2];
 		pos[0] = p.getData()[0];
