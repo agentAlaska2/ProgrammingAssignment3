@@ -62,6 +62,14 @@ public class Networking {
 		dataPacket = new DatagramPacket(data, 1, srvAddr, port);
 		gameDataSocket.send(dataPacket);
 	}
+	public void encodeData(Integer num, double x, double y) throws IOException {
+		data = new byte[3];
+		data[0] = num.byteValue();
+		data[1] = (byte) x;
+		data[2] = (byte) y;
+		dataPacket = new DatagramPacket(data, 3, srvAddr, port);
+		gameDataSocket.send(dataPacket);
+	}
 	
 	/**
 	 * Decodes data from a packet to interpreted as player movment
@@ -84,7 +92,7 @@ public class Networking {
 
 	@SuppressWarnings("null")
 	public double[] recieveFireball() throws IOException {
-		DatagramPacket p = new DatagramPacket(data, 1, srvAddr, port);
+		DatagramPacket p = new DatagramPacket(new byte[2], 2, srvAddr, port);
 		gameDataSocket.receive(p);
 		double[] pos = new double[2];
 		pos[0] = p.getData()[0];
