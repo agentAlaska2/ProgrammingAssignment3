@@ -13,7 +13,7 @@ public class Fireball {
 	double xSpeed;
 	double ySpeed;
 
-	public Fireball(Player player, Pane game) {
+	public Fireball(Pane game) {
 		fireballImage = new Image("file:Resources/fireball.gif", 25, 25, false, false);
 		fireballView = new ImageView(fireballImage);
 

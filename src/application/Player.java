@@ -18,6 +18,7 @@ public class Player {
 	ImageView playerView;
 	Point2D playerPos;
 	Bounds playerBounds;
+	int speed = 25;
 	
 	public Player(String playerNum, Pane game) {
 		this.playerNum = playerNum;
@@ -39,9 +40,8 @@ public class Player {
 		playerBounds = playerView.getBoundsInParent();
 	}
 
-	public void Movement(Pane game, Networking n, Boolean b) throws IOException {
+	public void Movement(Pane game, Networking n, Boolean b, Player p) throws IOException {
 	
-		int speed = 25;
 
 		playerView.setFocusTraversable(true);
 		playerView.requestFocus();
@@ -59,6 +59,7 @@ public class Player {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					moveOtherPlayer(p, n);
 				} else if (event.getCode() == KeyCode.S && playerView.getY() + speed <= 500 - 32) {
 					playerView.setY(playerView.getY() + speed);
 					playerPos.add(0,speed);
@@ -69,6 +70,7 @@ public class Player {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					moveOtherPlayer(p, n);
 				} else if (event.getCode() == KeyCode.A && playerView.getX() - speed >= 0) {
 					playerView.setX(playerView.getX() - speed);
 					playerPos.subtract(speed,0);
@@ -79,6 +81,7 @@ public class Player {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					moveOtherPlayer(p, n);
 				} else if (event.getCode() == KeyCode.D && playerView.getX() + speed <= 250 - 32) {
 					playerView.setX(playerView.getX() + speed);
 					playerPos.add(speed,0);
@@ -89,29 +92,13 @@ public class Player {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					moveOtherPlayer(p, n);
 				}
 				
 
 			});
 		}
 		
-		if (/*playerNum.equals("player2")*/!b) {
-			try {
-			int key = n.decodeData();
-			System.out.println("run");
-			if (key == 0 && playerView.getY() - speed >= 0) {
-				playerView.setY(playerView.getY() - speed);
-			} else if (key == 1 && playerView.getY() + speed <= 500 - 32) {
-				playerView.setY(playerView.getY() + speed);
-			} else if (key == 3 && playerView.getX() - speed >= 250) {
-				playerView.setX(playerView.getX() - speed);
-			} else if (key == 2  && playerView.getX() + speed <= 500 - 32) {
-				playerView.setX(playerView.getX() + speed);
-			}
-			} catch (Exception e){
-				System.out.println("No data");
-			}
-		}
 
 	}
 
@@ -130,5 +117,22 @@ public class Player {
 	
 	public int getHealth() {
 		return health;
+	}
+	
+	private void moveOtherPlayer(Player p, Networking n) {
+		try {
+			int key = n.decodeData();
+			if (key == 0 && p.playerView.getY() - speed >= 0) {
+				p.playerView.setY(p.playerView.getY() - speed);
+			} else if (key == 1 && p.playerView.getY() + speed <= 500 - 32) {
+				p.playerView.setY(p.playerView.getY() + speed);
+			} else if (key == 3 && p.playerView.getX() - speed >= 250) {
+				p.playerView.setX(p.playerView.getX() - speed);
+			} else if (key == 2  && p.playerView.getX() + speed <= 500 - 32) {
+				p.playerView.setX(p.playerView.getX() + speed);
+			}
+			} catch (Exception e){
+				System.out.println("No data");
+			}
 	}
 }
