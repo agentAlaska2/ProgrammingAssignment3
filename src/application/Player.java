@@ -102,9 +102,9 @@ public class Player {
 				playerView.setY(playerView.getY() - speed);
 			} else if (key == 1 && playerView.getY() + speed <= 500 - 32) {
 				playerView.setY(playerView.getY() + speed);
-			} else if (key == 2 && playerView.getX() - speed >= 250) {
+			} else if (key == 3 && playerView.getX() - speed >= 250) {
 				playerView.setX(playerView.getX() - speed);
-			} else if (key == 3 && playerView.getX() + speed <= 500 - 32) {
+			} else if (key == 2 && playerView.getX() + speed <= 500 - 32) {
 				playerView.setX(playerView.getX() + speed);
 			}
 			} catch (Exception e){

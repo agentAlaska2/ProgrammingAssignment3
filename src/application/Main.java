@@ -17,8 +17,8 @@ public class Main extends Application {
 
 	public void createFireball(double x, double y, Networking n) {
 		if (player1.getHealth() > 0 && player2.getHealth() > 0) {
-			Fireball fireball = new Fireball(player2, game);
-			fireball.CastFireball(player2, player1, game, x, y, n);
+			Fireball fireball = new Fireball(player1, game);
+			fireball.CastFireball(player1, player2, game, x, y, n);
 		}
 		if (player1.getHealth() <= 0) {
 			Text t = new Text(250, 250, "Player 2 wins!");
