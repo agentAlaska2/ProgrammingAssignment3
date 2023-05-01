@@ -1,7 +1,7 @@
 /**
  * Program represents player's inputs
  * 
- * 
+ * @author Will W
  */
 package application;
 
