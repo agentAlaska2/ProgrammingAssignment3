@@ -9,5 +9,6 @@ public enum Commands {
 	UP,
 	DOWN,
 	LEFT,
-	RIGHT
+	RIGHT,
+	FIREBALL
 }

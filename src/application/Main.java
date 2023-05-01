@@ -14,46 +14,12 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-	static Pane game = new Pane();
-	static Player player1 = new Player("player1", game);
-	static Player player2 = new Player("player2", game);
-
-	public static void createFireball(Player p, double x, double y, Networking n) {
-		if (player1.getHealth() > 0 && player2.getHealth() > 0 && p.playerNum.equals("player1")) {
-			Fireball fireball = new Fireball(game);
-			fireball.CastFireball(player1, player2, game, x, y, n);
-			n.sendFireball(x, y);
-		} else if (player1.getHealth() > 0 && player2.getHealth() > 0 && p.playerNum.equals("player2")) {
-			Fireball fireball = new Fireball(game);
-			fireball.CastFireball(player2, player1, game, x, y, n);
-		}
-		if (player1.getHealth() <= 0) {
-			Text t = new Text(250, 250, "Player 2 wins!");
-			player1.playerView.setVisible(false);
-			game.getChildren().add(t);
-		}
-		if (player2.getHealth() <= 0) {
-			Text t = new Text(250, 250, "Player 1 wins!");
-			player2.playerView.setVisible(false);
-			game.getChildren().add(t);
-		}
-	}
-
-	public void moveAndFireball(Pane game, Networking net, Player player1, Player player2) throws IOException {
-		player1.Movement(game, net, player2);
-		if (true) {
-			try {
-				double[] pos = net.recieveFireball();
-				System.out.println("run");
-				createFireball(player2, pos[0], pos[1], net);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+	Pane game = new Pane();
+	Player player1 = new Player("player1", game);
+	Player player2 = new Player("player2", game);
 
 	@Override
-	public void start(Stage primaryStage) {
+	public void start(Stage primaryStage) throws IOException {
 		try {
 			TextInputDialog getAddr = new TextInputDialog();
 			getAddr.setHeaderText(null);
@@ -63,10 +29,18 @@ public class Main extends Application {
 			Optional<String> addr = getAddr.showAndWait();
 			String name = addr.get();
 			Networking net = new Networking(name);
-			moveAndFireball(game, net, player1, player2);
+			player1.Movement(game, net, player2, player1);
 
 			game.setOnMousePressed(event -> {
-				createFireball(player1, event.getX(), event.getY(), net);
+				Fireball fireball = new Fireball(game);
+				fireball.CastFireball(player1, player2, game, event.getX(), event.getY(), net);
+				try {
+					net.encodeData(Commands.FIREBALL.ordinal());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				net.sendFireball(event.getX(), event.getY());
 			});
 
 			game.setStyle("-fx-background-color: lightgray;");
