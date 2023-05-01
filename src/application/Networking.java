@@ -34,17 +34,20 @@ public class Networking {
 	 * @throws SocketException
 	 */
 	public Networking(String addr) throws UnknownHostException, SocketException {
+		System.out.println(addr);
 		hostAddr = (Inet4Address) Inet4Address.getLocalHost();
 		Random r = new Random();
 		port = (int) ((r.nextDouble() * 100) + 1024);
 		gameDataSocket = new DatagramSocket(port);
-		byte[] ipAddr = addr.getBytes();
-//		Scanner scr = new Scanner(addr);
-//		scr.useDelimiter(".");
-//		for (int i = 0; i < 4; i++) {
-//			int n = Integer.parseInt(scr.next());
-//			//ipAddr[i] = (Integer) n.byteValue();
-		//}
+		byte[] ipAddr = new byte[4];
+		Scanner scr = new Scanner(addr);
+		scr.useDelimiter(" ");
+		for (int i = 0; i < 4; i++) {
+			String temp = scr.next();
+			System.out.println(temp);
+			Integer n = Integer.parseInt(temp);
+			ipAddr[i] = n.byteValue();
+		}
 		srvAddr = InetAddress.getByAddress(ipAddr);
 		// gameDataSocket.connect(InetAddress.getByName(hostname), port);
 		gameDataSocket.connect(srvAddr, port);

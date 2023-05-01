@@ -13,6 +13,7 @@ public class Main extends Application {
 	Pane game = new Pane();
 	Player player1 = new Player("player1", game);
 	Player player2 = new Player("player2", game);
+	int[] addr;
 
 	public void createFireball(double x, double y, Networking n) {
 		if (player1.getHealth() > 0 && player2.getHealth() > 0) {
@@ -39,7 +40,7 @@ public class Main extends Application {
 			getAddr.setTitle(null);
 			getAddr.setContentText("Enter the IP address of the player's computer you wish to compete with: ");
 			Optional<String> addr = getAddr.showAndWait();
-			String name = addr.toString();
+			String name = addr.get();
 			Networking net = new Networking(name);
 			// Fireball fireball = new Fireball(player2, game);
 			player1.Movement(game, net);
