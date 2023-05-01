@@ -4,6 +4,9 @@ import java.util.Optional;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
@@ -13,12 +16,13 @@ public class Main extends Application {
 	Pane game = new Pane();
 	Player player1 = new Player("player1", game);
 	Player player2 = new Player("player2", game);
-	int[] addr;
+	boolean isHost;
 
 	public void createFireball(double x, double y, Networking n) {
 		if (player1.getHealth() > 0 && player2.getHealth() > 0) {
 			Fireball fireball = new Fireball(player1, game);
 			fireball.CastFireball(player1, player2, game, x, y, n);
+			n.sendFireball(x,y);
 		}
 		if (player1.getHealth() <= 0) {
 			Text t = new Text(250, 250, "Player 2 wins!");
@@ -38,13 +42,22 @@ public class Main extends Application {
 			TextInputDialog getAddr = new TextInputDialog();
 			getAddr.setHeaderText(null);
 			getAddr.setTitle(null);
-			getAddr.setContentText("Enter the IP address of the player's computer you wish to compete with: ");
+			getAddr.setContentText("Enter the IP address of the player's computer you wish to compete with using spaces: ");
 			Optional<String> addr = getAddr.showAndWait();
 			String name = addr.get();
 			Networking net = new Networking(name);
-			// Fireball fireball = new Fireball(player2, game);
-			player1.Movement(game, net);
-			player2.Movement(game, net);
+			Alert host = new Alert(AlertType.CONFIRMATION);
+			host.setHeaderText(null);
+			host.setContentText("Do you want to host?");
+			Optional<ButtonType> button = host.showAndWait();
+			if(button.get() == ButtonType.OK) {
+				isHost = true;
+			}
+			else {
+				isHost = false;
+			}
+			player1.Movement(game, net, isHost);
+			player2.Movement(game, net, false);
 			try {
 				double[] pos = net.recieveFireball();
 				createFireball(pos[0], pos[1], net);
@@ -54,20 +67,7 @@ public class Main extends Application {
 
 			game.setOnMousePressed(event -> {
 				createFireball(event.getX(), event.getY(), net);
-//				Fireball fireball = new Fireball(player2, game);
-//				fireball.CastFireball(player2, player1, game, event.getX(), event.getY(), net);
 			});
-
-			if (player1.getHealth() <= 0) {
-				Text win = new Text("Player 1 Wins");
-				player1.playerView.setVisible(false);
-				game.getChildren().add(win);
-			}
-			if (player2.getHealth() <= 0) {
-				Text win = new Text("Player 2 Wins");
-				player1.playerView.setVisible(false);
-				game.getChildren().add(win);
-			}
 
 			game.setStyle("-fx-background-color: lightgray;");
 			primaryStage.setResizable(false);

@@ -39,14 +39,14 @@ public class Player {
 		playerBounds = playerView.getBoundsInParent();
 	}
 
-	public void Movement(Pane game, Networking n) throws IOException {
+	public void Movement(Pane game, Networking n, Boolean b) throws IOException {
 	
 		int speed = 25;
 
 		playerView.setFocusTraversable(true);
 		playerView.requestFocus();
 
-		if (playerNum.equals("player1")) {
+		if (/*playerNum.equals("player1")*/b) {
 			
 			game.setOnKeyPressed(event -> {
 				if (event.getCode() == KeyCode.W && playerView.getY() - speed >= 0) {
@@ -95,16 +95,17 @@ public class Player {
 			});
 		}
 		
-		if (playerNum.equals("player2")) {
+		if (/*playerNum.equals("player2")*/!b) {
 			try {
 			int key = n.decodeData();
+			System.out.println("run");
 			if (key == 0 && playerView.getY() - speed >= 0) {
 				playerView.setY(playerView.getY() - speed);
 			} else if (key == 1 && playerView.getY() + speed <= 500 - 32) {
 				playerView.setY(playerView.getY() + speed);
 			} else if (key == 3 && playerView.getX() - speed >= 250) {
 				playerView.setX(playerView.getX() - speed);
-			} else if (key == 2 && playerView.getX() + speed <= 500 - 32) {
+			} else if (key == 2  && playerView.getX() + speed <= 500 - 32) {
 				playerView.setX(playerView.getX() + speed);
 			}
 			} catch (Exception e){
