@@ -40,14 +40,12 @@ public class Player {
 		playerBounds = playerView.getBoundsInParent();
 	}
 
-	public void Movement(Pane game, Networking n, Boolean b, Player p) throws IOException {
+	public void Movement(Pane game, Networking n, Player p) throws IOException {
 	
 
 		playerView.setFocusTraversable(true);
 		playerView.requestFocus();
 
-		if (/*playerNum.equals("player1")*/b) {
-			
 			game.setOnKeyPressed(event -> {
 				if (event.getCode() == KeyCode.W && playerView.getY() - speed >= 0) {
 					playerView.setY(playerView.getY() - speed);
@@ -93,11 +91,11 @@ public class Player {
 						e.printStackTrace();
 					}
 					moveOtherPlayer(p, n);
+			
 				}
 				
 
 			});
-		}
 		
 
 	}
